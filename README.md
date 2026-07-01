@@ -1,4 +1,4 @@
-# SSC0158 - Grupo 03 - Checkpoint 3
+# SSC0158 - Grupo 03
 
 Protótipo funcional para o tema **Serviços Web: SOA, SOAP e REST**, usando um **gerenciador de tarefas (task manager)** como domínio comum para comparar REST e SOAP.
 
@@ -97,13 +97,13 @@ senha: admin
 Execute um experimento rápido:
 
 ```bash
-WORKLOAD=quick SCENARIO_DURATION=5s make checkpoint3
+WORKLOAD=quick SCENARIO_DURATION=5s make final
 ```
 
 Execute carga maior, com centenas de milhares de requisições:
 
 ```bash
-WORKLOAD=hundreds make checkpoint3
+WORKLOAD=hundreds make final
 ```
 
 Esse comando gera os arquivos brutos localmente apenas durante a execução e mantém ao final somente os resultados agregados em `results/tables`, `results/figures` e `results/evidence_runtime.json`.
@@ -192,18 +192,18 @@ O gerador de carga é o **k6**, executado em container (`grafana/k6`). Instale a
 python3 -m pip install -r experiments/requirements.txt
 ```
 
-Execute o checkpoint 3 completo:
+Execute o Projeto completo:
 
 ```bash
-make checkpoint3
+make final
 ```
 
 Para ajustar a duração de cada cenário k6:
 
 ```bash
-make checkpoint3                 # perfil padrão: dezenas de milhares de requisições
-WORKLOAD=quick make checkpoint3  # teste rápido local
-WORKLOAD=hundreds make checkpoint3  # centenas de milhares de requisições
+make final                 # perfil padrão: dezenas de milhares de requisições
+WORKLOAD=quick make final  # teste rápido local
+WORKLOAD=hundreds make final  # centenas de milhares de requisições
 ```
 
 Saídas geradas:
@@ -218,7 +218,7 @@ Saídas geradas:
 | Gráfico de throughput e payload | `results/figures/throughput_payload.png` |
 | Evidência de estado da execução | `results/evidence_runtime.json` |
 
-Os arquivos brutos temporários são apagados automaticamente ao fim de `make checkpoint3` para evitar arquivos locais muito grandes.
+Os arquivos brutos temporários são apagados automaticamente ao fim de `make final` para evitar arquivos locais muito grandes.
 
 ## Cenários experimentais
 
@@ -278,8 +278,8 @@ make clean    # remove saídas experimentais geradas
 └── docs/
 ```
 
-## Documentação do Checkpoint 3
+## Documentação do Projeto
 
-- `docs/checkpoint3.md`: setup experimental, arquitetura, métricas e evidências.
-- `docs/report_checkpoint3.md`: texto técnico para incorporar ao relatório.
+- `docs/final.md`: setup experimental, arquitetura, métricas e evidências.
+- `docs/report_final.md`: texto técnico para incorporar ao relatório.
 - `results/preliminary_results.md`: orientação de resultados preliminares.

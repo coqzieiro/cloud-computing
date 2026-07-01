@@ -1,8 +1,8 @@
-# Relatorio tecnico - Checkpoint 3
+# Relatorio tecnico - Projeto
 
 ## 1. Tema e objetivo
 
-O projeto do Grupo 03 aborda o tema **Servicos Web: SOA, SOAP e REST** por meio de um prototipo distribuido de gerenciamento de tarefas. O objetivo do Checkpoint 3 e comparar, em um mesmo dominio funcional, o comportamento de integracoes REST e SOAP sob cargas controladas.
+O projeto do Grupo 03 aborda o tema **Servicos Web: SOA, SOAP e REST** por meio de um prototipo distribuido de gerenciamento de tarefas. O objetivo do Projeto e comparar, em um mesmo dominio funcional, o comportamento de integracoes REST e SOAP sob cargas controladas.
 
 O experimento mede:
 
@@ -199,7 +199,7 @@ Na VM usada no experimento, a execucao foi feita a partir de `/tmp` para evitar 
 
 ## 14. Conclusao
 
-O Checkpoint 3 entregou um prototipo funcional com REST, SOAP, MQTT, banco de dados, interface web e observabilidade. O setup experimental permitiu gerar cargas controladas, preservar os resultados de cada run e produzir tabelas e figuras comparativas.
+O Projeto entregou um prototipo funcional com REST, SOAP, MQTT, banco de dados, interface web e observabilidade. O setup experimental permitiu gerar cargas controladas, preservar os resultados de cada run e produzir tabelas e figuras comparativas.
 
 Nos runs da VM `quick-final` e `tens-final`, REST e SOAP completaram todos os cenarios esperados com 100% de sucesso. REST apresentou menor payload e menor latencia media nas comparacoes diretas. SOAP manteve funcionamento correto, mas com maior tamanho de payload e P95 mais elevado, refletindo o custo adicional do envelope XML e do contrato WSDL.
 

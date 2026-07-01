@@ -1,4 +1,4 @@
-# Checkpoint 3 — Protótipo, setup experimental e evidências
+# Projeto — Protótipo, setup experimental e evidências
 
 ## 1. Escopo implementado
 
@@ -121,11 +121,11 @@ Baseline: `REST` é o baseline comparativo por ser a alternativa mais simples e 
 
 ```bash
 python3 -m pip install -r experiments/requirements.txt
-make checkpoint3
-WORKLOAD=hundreds make checkpoint3
+make final
+WORKLOAD=hundreds make final
 ```
 
-O alvo `make checkpoint3` executa o k6 em container com `WORKLOAD=tens` por padrão, gerando dezenas de milhares de requisições. Para uma rodada de centenas de milhares, usar `WORKLOAD=hundreds make checkpoint3`. O pipeline gera `results/raw/k6_metrics.json`, converte as métricas para `results/raw/experiment_latency.csv` e produz tabelas/figuras estatísticas.
+O alvo `make final` executa o k6 em container com `WORKLOAD=tens` por padrão, gerando dezenas de milhares de requisições. Para uma rodada de centenas de milhares, usar `WORKLOAD=hundreds make final`. O pipeline gera `results/raw/k6_metrics.json`, converte as métricas para `results/raw/experiment_latency.csv` e produz tabelas/figuras estatísticas.
 
 Saídas:
 

@@ -1,4 +1,4 @@
-.PHONY: up down down-volumes down-snap-fix logs ps experiment analyze analyze-docker checkpoint3 clean clean-raw-experiment
+.PHONY: up down down-volumes down-snap-fix logs ps experiment analyze analyze-docker final clean clean-raw-experiment
 
 PYTHON ?= python3
 ANALYSIS_IMAGE ?= python:3.12-slim
@@ -41,7 +41,7 @@ analyze:
 analyze-docker:
 	docker run --rm -v "$$(pwd):/app" -w /app $(ANALYSIS_IMAGE) sh -c "pip install -r experiments/requirements.txt && python experiments/analyze_results.py --input $(K6_METRICS) --outdir $(RUN_DIR)"
 
-checkpoint3: experiment analyze-docker
+final: experiment analyze-docker
 	docker run --rm --network host -v "$$(pwd):/app" -w /app $(ANALYSIS_IMAGE) sh -c "pip install requests==2.32.3 && python scripts/collect_evidence.py --output $(RUN_DIR)/evidence_runtime.json"
 	@echo "Resultados finais em $(RUN_DIR)/tables, $(RUN_DIR)/figures, $(RUN_DIR)/raw e $(RUN_DIR)/evidence_runtime.json"
 

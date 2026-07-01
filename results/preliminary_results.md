@@ -1,11 +1,11 @@
-# Resultados preliminares do Checkpoint 3
+# Resultados preliminares do Projeto
 
 Este diretório contém resultados reproduzíveis gerados a partir do protótipo containerizado do **task manager**. A execução oficial pode ser refeita na VM do LaSDPC com:
 
 1. `make up`
 2. aguardar pelo menos 2 ciclos do serviço `collector`
 3. `python3 -m pip install -r experiments/requirements.txt`
-4. `make checkpoint3` para dezenas de milhares de requisições ou `WORKLOAD=hundreds make checkpoint3` para centenas de milhares.
+4. `make final` para dezenas de milhares de requisições ou `WORKLOAD=hundreds make final` para centenas de milhares.
 
 Perfis de carga:
 
