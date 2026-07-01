@@ -1,0 +1,57 @@
+scenarios:
+  - name: rest_low
+    protocol: rest
+    rate_per_second: 2
+    concurrency: 2
+  - name: rest_medium
+    protocol: rest
+    rate_per_second: 8
+    concurrency: 8
+  - name: soap_low
+    protocol: soap
+    rate_per_second: 2
+    concurrency: 2
+  - name: soap_medium
+    protocol: soap
+    rate_per_second: 8
+    concurrency: 8
+  - name: mixed_medium
+    protocol: both
+    rate_per_second: 8
+    concurrency: 8
+  - name: rest_10k
+    protocol: rest
+    rate_per_second: 500
+    duration: 20s
+    concurrency: 120
+    target_requests: 10000
+  - name: soap_10k
+    protocol: soap
+    rate_per_second: 250
+    duration: 40s
+    concurrency: 120
+    target_requests: 10000
+  - name: mixed_20k
+    protocol: both
+    rate_per_second: 1000
+    duration: 20s
+    concurrency: 240
+    target_requests: 20000
+  - name: rest_100k
+    protocol: rest
+    rate_per_second: 1000
+    duration: 100s
+    concurrency: 240
+    target_requests: 100000
+  - name: soap_100k
+    protocol: soap
+    rate_per_second: 500
+    duration: 200s
+    concurrency: 240
+    target_requests: 100000
+  - name: mixed_200k
+    protocol: both
+    rate_per_second: 1000
+    duration: 200s
+    concurrency: 480
+    target_requests: 200000

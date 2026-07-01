@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: rest-service
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["rest-service:8000"]
+  - job_name: soap-service
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["soap-service:8001"]
+  - job_name: web-app
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["web-app:5051"]

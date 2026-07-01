@@ -1,0 +1,9 @@
+{
+  "title": "Experimento G03 #0001",
+  "description": "Tarefa sintética gerada para comparar o mesmo domínio funcional via REST e SOAP.",
+  "status": "pending",
+  "priority": 2,
+  "created_at": "2026-05-31T00:00:00+00:00",
+  "updated_at": "2026-05-31T00:00:00+00:00",
+  "sample_id": 1
+}

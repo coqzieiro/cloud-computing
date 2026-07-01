@@ -1,0 +1,1 @@
+Dados brutos do produtor de tarefas. O arquivo `task_events.csv` é criado pelo serviço `collector` durante a execução. A amostra JSON versionada registra evidência inicial do payload usado pelo task manager.

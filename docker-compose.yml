@@ -1,0 +1,147 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: g03-postgres
+    environment:
+      POSTGRES_DB: cloud_g03
+      POSTGRES_USER: cloud
+      POSTGRES_PASSWORD: cloud
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloud -d cloud_g03"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: g03-mosquitto
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./infra/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -h localhost -t '$$SYS/#' -C 1 -W 2 >/dev/null 2>&1 || exit 0"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  rest-service:
+    build:
+      context: .
+      dockerfile: src/rest_service/Dockerfile
+    container_name: g03-rest-service
+    environment:
+      DATABASE_URL: postgresql+psycopg://cloud:cloud@postgres:5432/cloud_g03
+      SERVICE_NAME: rest-service
+      REST_WORKERS: ${REST_WORKERS:-4}
+      REST_KEEPALIVE_TIMEOUT: ${REST_KEEPALIVE_TIMEOUT:-15}
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  soap-service:
+    build:
+      context: .
+      dockerfile: src/soap_service/Dockerfile
+    container_name: g03-soap-service
+    environment:
+      DATABASE_URL: postgresql+psycopg://cloud:cloud@postgres:5432/cloud_g03
+      SERVICE_NAME: soap-service
+      SOAP_WORKERS: ${SOAP_WORKERS:-4}
+      SOAP_TIMEOUT: ${SOAP_TIMEOUT:-120}
+    ports:
+      - "8001:8001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  collector:
+    build:
+      context: .
+      dockerfile: src/collector/Dockerfile
+    container_name: g03-collector
+    environment:
+      MQTT_HOST: mosquitto
+      MQTT_PORT: 1883
+      MQTT_TOPIC: grupo03/tasks/events
+      REST_URL: http://rest-service:8000/v1/tasks
+      SOAP_WSDL: http://soap-service:8001/?wsdl
+      COLLECT_INTERVAL_SECONDS: 30
+      FORWARD_PROTOCOL: both
+      TASK_PREFIX: Experimento G03
+      DATA_DIR: /app/data
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - mosquitto
+      - rest-service
+      - soap-service
+
+  web-app:
+    build:
+      context: .
+      dockerfile: src/web_app/Dockerfile
+    container_name: g03-web-app
+    environment:
+      DATABASE_URL: postgresql+psycopg://cloud:cloud@postgres:5432/cloud_g03
+      SERVICE_NAME: web-app
+    ports:
+      - "5051:5051"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  prometheus:
+    image: prom/prometheus:v2.54.1
+    container_name: g03-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - rest-service
+      - soap-service
+      - web-app
+
+  grafana:
+    image: grafana/grafana:11.2.2
+    container_name: g03-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./infra/grafana/provisioning:/etc/grafana/provisioning:ro
+    depends_on:
+      - prometheus
+
+  k6:
+    image: grafana/k6:0.54.0
+    container_name: g03-k6
+    profiles: ["experiments"]
+    user: "0:0"
+    environment:
+      REST_URL: http://rest-service:8000/v1/tasks
+      SOAP_URL: http://soap-service:8001/
+      WORKLOAD: ${WORKLOAD:-tens}
+      SCENARIO_DURATION: ${SCENARIO_DURATION:-20s}
+      SEQUENTIAL_SCENARIOS: ${SEQUENTIAL_SCENARIOS:-true}
+      SCENARIO_GAP_SECONDS: ${SCENARIO_GAP_SECONDS:-5}
+      REQUEST_TIMEOUT: ${REQUEST_TIMEOUT:-30s}
+      STARTUP_RETRIES: ${STARTUP_RETRIES:-30}
+      STARTUP_DELAY_SECONDS: ${STARTUP_DELAY_SECONDS:-2}
+    volumes:
+      - ./experiments/k6:/scripts:ro
+      - ./results:/results
+    entrypoint: ["k6"]
+
+volumes:
+  postgres-data:
+  grafana-data:
